@@ -97,7 +97,6 @@ function App() {
   return (
     <div className="App">
       <h1>Table with Checkboxes and ApexCharts</h1>
-      selectedRows:{selectedRows}
       {/* BaseTable Component with Checkboxes */}
       <BaseTable
         data={initialData} // Данные для таблицы
