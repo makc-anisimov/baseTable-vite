@@ -1,55 +1,66 @@
-import { useEffect, useState } from 'react';
-import './App.css';
-import BaseTable from 'react-base-table';
-import 'react-base-table/styles.css';
-import Chart from 'react-apexcharts';
-import { Checkbox } from 'antd';
+import { useEffect, useState } from "react";
+import "./App.css";
+import BaseTable from "react-base-table";
+import "react-base-table/styles.css";
+import Chart from "react-apexcharts";
+import { Checkbox } from "antd";
 
 function App() {
   // Данные для таблицы (initialData)
   const initialData = [
-    { id: 1, name: 'Product A', value: 100, quantity: 5 },
-    { id: 2, name: 'Product B', value: 200, quantity: 10 },
-    { id: 3, name: 'Product C', value: 150, quantity: 8 },
-    { id: 4, name: 'Product D', value: 250, quantity: 12 },
+    { id: 1, name: "Product A", value: 100, quantity: 5 },
+    { id: 2, name: "Product B", value: 200, quantity: 10 },
+    { id: 3, name: "Product C", value: 150, quantity: 8 },
+    { id: 4, name: "Product D", value: 250, quantity: 12 },
   ];
 
   // Состояние для отслеживания выбранных строк
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
-  // TODO: Реализовать функцию для добавления/удаления выбранных строк в состояние selectedRows
+  // TODO: Реализовать функцию для добавления/удаления выбранных строк в состояние selectedRows +
   const toggleRowSelection = (id: number) => {
     // Реализуйте логику выбора строк (добавление/удаление id)
+    setSelectedRows((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((rowId) => rowId !== id); // Удаляем, если уже выбран
+      } else {
+        return [...prev, id]; // Добавляем, если не выбран
+      }
+    });
   };
 
   // Состояние для колонок таблицы
   const [columns, setColumns] = useState<any[]>([
     {
-      key: 'checkbox',
-      title: 'Select',
+      key: "checkbox",
+      title: "Select",
       width: 100,
-      dataKey: 'id',
-      selectedRows,
+      dataKey: "id",
+      // selectedRows,
       // TODO: Добавить рендеринг чекбокса с использованием компонента Checkbox
-      cellRenderer: ({ rowData, column }: any) => (
+      cellRenderer: ({ rowData }: any) => (
         <Checkbox
-        // Реализуйте проверку и обработку изменения чекбокса
-        // onChange={() => toggleRowSelection(rowData.id)}
+          // Реализуйте проверку и обработку изменения чекбокса
+          onChange={() => {
+            toggleRowSelection(rowData.id);
+          }}
         />
       ),
     },
-    { key: 'name', title: 'Product Name', dataKey: 'name', width: 200 },
-    { key: 'value', title: 'Value', dataKey: 'value', width: 150 },
-    { key: 'quantity', title: 'Quantity', dataKey: 'quantity', width: 150 },
+    { key: "name", title: "Product Name", dataKey: "name", width: 200 },
+    { key: "value", title: "Value", dataKey: "value", width: 150 },
+    { key: "quantity", title: "Quantity", dataKey: "quantity", width: 150 },
   ]);
 
-  // TODO: Отфильтровать данные на основе выбранных строк (selectedRows)
-  const selectedData = [];
+  // TODO: Отфильтровать данные на основе выбранных строк (selectedRows) +
+  const selectedData = initialData.filter((row) =>
+    selectedRows.includes(row.id)
+  );
 
   // Опции для графика ApexCharts
   const chartOptions = {
     chart: {
-      id: 'basic-bar',
+      id: "basic-bar",
     },
     xaxis: {
       categories: selectedData.map((row) => row.name),
@@ -62,14 +73,14 @@ function App() {
   // Серии данных для графика
   const chartSeries = [
     {
-      name: 'Value',
-      // TODO: Установите данные для серии "Value" (значение продукта)
-      // data: selectedData.map...
+      name: "Value",
+      // TODO: Установите данные для серии "Value" (значение продукта) +
+      data: selectedData.map((row) => row.value),
     },
     {
-      name: 'Quantity',
-      // TODO: Установите данные для серии "Quantity" (количество продукта)
-      // data: selectedData.map...
+      name: "Quantity",
+      // TODO: Установите данные для серии "Quantity" (количество продукта) +
+      data: selectedData.map((row) => row.quantity),
     },
   ];
 
@@ -86,17 +97,14 @@ function App() {
   return (
     <div className="App">
       <h1>Table with Checkboxes and ApexCharts</h1>
-
+      selectedRows:{selectedRows}
       {/* BaseTable Component with Checkboxes */}
       <BaseTable
-        // Добавить данные для таблицы
+        data={initialData} // Данные для таблицы
+        columns={columns} // Колонки
         width={600}
         height={300}
-        data={initialData}
-        // <Column
-        
       />
-
       {/* ApexCharts Component */}
       {selectedRows.length > 0 ? (
         <Chart
