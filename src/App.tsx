@@ -17,7 +17,7 @@ function App() {
   // Состояние для отслеживания выбранных строк
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
-  // TODO: Реализовать функцию для добавления/удаления выбранных строк в состояние selectedRows +
+  // TODO: Реализовать функцию для добавления/удаления выбранных строк в состояние selectedRows  - Done!
   const toggleRowSelection = (id: number) => {
     // Реализуйте логику выбора строк (добавление/удаление id)
     setSelectedRows((prev) => {
@@ -36,11 +36,12 @@ function App() {
       title: "Select",
       width: 100,
       dataKey: "id",
-      // selectedRows,
-      // TODO: Добавить рендеринг чекбокса с использованием компонента Checkbox
+      selectedRows,
+      // TODO: Добавить рендеринг чекбокса с использованием компонента Checkbox - Done!
       cellRenderer: ({ rowData }: any) => (
         <Checkbox
-          // Реализуйте проверку и обработку изменения чекбокса
+          // Реализуйте проверку и обработку изменения чекбокса - Done!
+          checked={selectedRows.includes(rowData.id)}
           onChange={() => {
             toggleRowSelection(rowData.id);
           }}
